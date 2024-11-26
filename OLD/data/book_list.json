@@ -1,0 +1,170 @@
+[
+    {
+        "title": "To Kill a Mockingbird",
+        "author": "Harper Lee",
+        "year": 1960,
+        "description": "A novel about the serious issues of race class and gender in the American South seen through the eyes of a young girl."
+    },
+    {
+        "title": "1984",
+        "author": "George Orwell",
+        "year": 1949,
+        "description": "A dystopian novel set in a totalitarian society ruled by Big Brother exploring themes of surveillance truth and individuality."
+    },
+    {
+        "title": "Pride and Prejudice",
+        "author": "Jane Austen",
+        "year": 1813,
+        "description": "A classic novel that critiques the British landed gentry and explores themes of love reputation and class."
+    },
+    {
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "year": 1925,
+        "description": "A tale of the American Dream gone wrong chronicling the life of Jay Gatsby and his love for Daisy Buchanan."
+    },
+    {
+        "title": "Moby-Dick",
+        "author": "Herman Melville",
+        "year": 1851,
+        "description": "An epic tale of obsession and revenge as Captain Ahab hunts the elusive white whale Moby Dick."
+    },
+    {
+        "title": "War and Peace",
+        "author": "Leo Tolstoy",
+        "year": 1869,
+        "description": "A historical novel that intertwines the lives of families during the Napoleonic Wars in Russia."
+    },
+    {
+        "title": "The Catcher in the Rye",
+        "author": "J.D. Salinger",
+        "year": 1951,
+        "description": "A coming-of-age story that follows Holden Caulfield a teenager who struggles with the complexities of adulthood."
+    },
+    {
+        "title": "Brave New World",
+        "author": "Aldous Huxley",
+        "year": 1932,
+        "description": "A dystopian novel that explores a future society driven by technological advancements and conformity."
+    },
+    {
+        "title": "The Alchemist",
+        "author": "Paulo Coelho",
+        "year": 1988,
+        "description": "A philosophical tale about a shepherd named Santiago who dreams of discovering a treasure hidden near the Egyptian pyramids."
+    },
+    {
+        "title": "One Hundred Years of Solitude",
+        "author": "Gabriel Garc\u00eda M\u00e1rquez",
+        "year": 1967,
+        "description": "A multi-generational story that explores the Buend\u00eda family's experiences in the fictional town of Macondo."
+    },
+    {
+        "title": "Jane Eyre",
+        "author": "Charlotte Bront\u00eb",
+        "year": 1847,
+        "description": "A novel that follows the life of an orphaned girl as she grows up faces adversity and finds love."
+    },
+    {
+        "title": "The Picture of Dorian Gray",
+        "author": "Oscar Wilde",
+        "year": 1890,
+        "description": "A philosophical novel about a man who remains eternally young while a portrait of him ages and reflects his moral decay."
+    },
+    {
+        "title": "Fahrenheit 451",
+        "author": "Ray Bradbury",
+        "year": 1953,
+        "description": "A dystopian novel that depicts a future where books are banned and 'firemen' burn any that are found."
+    },
+    {
+        "title": "The Hobbit",
+        "author": "J.R.R. Tolkien",
+        "year": 1937,
+        "description": "A fantasy novel about the adventures of Bilbo Baggins a hobbit who embarks on a quest with a group of dwarves."
+    },
+    {
+        "title": "Les Mis\u00e9rables",
+        "author": "Victor Hugo",
+        "year": 1862,
+        "description": "A sweeping historical novel that explores themes of justice redemption and love through the lives of various characters in France."
+    },
+    {
+        "title": "Crime and Punishment",
+        "author": "Fyodor Dostoevsky",
+        "year": 1866,
+        "description": "A psychological novel that follows a young man who commits murder and grapples with guilt and redemption."
+    },
+    {
+        "title": "The Grapes of Wrath",
+        "author": "John Steinbeck",
+        "year": 1939,
+        "description": "A powerful depiction of the struggles of a family during the Great Depression as they migrate to California."
+    },
+    {
+        "title": "The Catch-22",
+        "author": "Joseph Heller",
+        "year": 1961,
+        "description": "A satirical novel that critiques the absurdities of war and bureaucracy through the experiences of a U.S. Army Air Forces B-25 bombardier."
+    },
+    {
+        "title": "Animal Farm",
+        "author": "George Orwell",
+        "year": 1945,
+        "description": "An allegorical novella that satirizes totalitarianism through a group of farm animals who overthrow their human farmer."
+    },
+    {
+        "title": "The Brothers Karamazov",
+        "author": "Fyodor Dostoevsky",
+        "year": 1880,
+        "description": "A philosophical novel that delves into deep moral and spiritual questions through the lives of the Karamazov brothers."
+    },
+    {
+        "title": "Little Women",
+        "author": "Louisa May Alcott",
+        "year": 1868,
+        "description": "A coming-of-age novel about the lives relationships and personal growth of the four March sisters during the Civil War era."
+    },
+    {
+        "title": "The Old Man and the Sea",
+        "author": "Ernest Hemingway",
+        "year": 1952,
+        "description": "A short novel that tells the story of an aging fisherman who struggles with a giant marlin far out in the Gulf Stream."
+    },
+    {
+        "title": "The Road",
+        "author": "Cormac McCarthy",
+        "year": 2006,
+        "description": "A post-apocalyptic novel that follows a father and son as they journey through a devastated landscape struggling for survival."
+    },
+    {
+        "title": "The Secret Garden",
+        "author": "Frances Hodgson Burnett",
+        "year": 1911,
+        "description": "A children\u2019s novel about a young girl who discovers a neglected garden and transforms it with the help of new friends."
+    },
+    {
+        "title": "Life of Pi",
+        "author": "Yann Martel",
+        "year": 2001,
+        "description": "A fantastical survival story of a young boy stranded on a lifeboat with a Bengal tiger in the Pacific Ocean."
+    },
+    {
+        "title": "Slaughterhouse-Five",
+        "author": "Kurt Vonnegut",
+        "year": 1969,
+        "description": "A science fiction-infused anti-war novel that follows the life of Billy Pilgrim who becomes 'unstuck in time'."
+    },
+    {
+        "title": "The Bell Jar",
+        "author": "Sylvia Plath",
+        "year": 1963,
+        "description": "A semi-autobiographical novel that explores themes of identity mental illness and the struggles of a young woman in 1950s America."
+    },
+    {
+        "title": "The Kite Runner",
+        "author": "Khaled Hosseini",
+        "year": 2003,
+        "description": "A poignant tale of friendship and redemption set against the backdrop of a changing Afghanistan."
+    }
+]

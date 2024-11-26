@@ -1,0 +1,77 @@
+[
+    {
+        "name": "Literary Escapists",
+        "leader": "Alice Thompson",
+        "description": "A group of avid readers who explore different genres each month from fantasy to historical fiction seeking to escape into new worlds."
+    },
+    {
+        "name": "Thriller Seekers",
+        "leader": "David Ramirez",
+        "description": "Focused on suspense and mystery this club dives into the best thrillers and crime novels often featuring guest authors."
+    },
+    {
+        "name": "The Classics Circle",
+        "leader": "Margaret Hughes",
+        "description": "Dedicated to reading and discussing classic literature this club encourages deep analysis and exploration of timeless themes."
+    },
+    {
+        "name": "Fantasy Fellowship",
+        "leader": "Jordan Lee",
+        "description": "A gathering for fans of fantasy novels where members share their favorite worlds characters and magical adventures."
+    },
+    {
+        "name": "Bookish Bites",
+        "leader": "Emma Carter",
+        "description": "Combining love for books with culinary delights this club features a themed book each month paired with related dishes."
+    },
+    {
+        "name": "Romance Readers Anonymous",
+        "leader": "Samantha Brown",
+        "description": "A safe space for romance enthusiasts to discuss their favorite love stories and discover new authors and tropes."
+    },
+    {
+        "name": "Science Fiction Society",
+        "leader": "Marcus Nguyen",
+        "description": "Exploring futuristic worlds and technology this club discusses thought-provoking sci-fi novels and their implications on society."
+    },
+    {
+        "name": "Poetry Palooza",
+        "leader": "Linda Green",
+        "description": "Focusing on both classic and contemporary poetry this club meets to share poems and discuss themes styles and personal interpretations."
+    },
+    {
+        "name": "Young Adult Yarns",
+        "leader": "Jason Miller",
+        "description": "A vibrant group dedicated to young adult literature discussing trending books and themes that resonate with a younger audience."
+    },
+    {
+        "name": "Historical Fiction Fans",
+        "leader": "Rachel Adams",
+        "description": "A club for those who love stories set in the past exploring different time periods and real historical events through fiction."
+    },
+    {
+        "name": "Bookworms United",
+        "leader": "Isabella Wilson",
+        "description": "A diverse group of readers who enjoy sharing book recommendations across all genres fostering a love for reading in the community."
+    },
+    {
+        "name": "Memoir & Memoir",
+        "leader": "Oliver Johnson",
+        "description": "Focusing on autobiographies and memoirs this club encourages members to share personal stories and life lessons inspired by the readings."
+    },
+    {
+        "name": "Graphic Novel Guild",
+        "leader": "Chloe Smith",
+        "description": "Celebrating the art of graphic novels and comics this club discusses both classic and contemporary works highlighting storytelling through visuals."
+    },
+    {
+        "name": "Thrilling Reads & Chills",
+        "leader": "Henry Clarke",
+        "description": "This club dives into the world of horror and psychological thrillers perfect for fans seeking spine-tingling narratives."
+    },
+    {
+        "name": "Eco-Literature League",
+        "leader": "Sophia Martinez",
+        "description": "Exploring themes of nature sustainability and environmentalism this club reads works that inspire a deeper connection with the planet."
+    }
+]
