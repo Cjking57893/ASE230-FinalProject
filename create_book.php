@@ -1,3 +1,24 @@
+<?php
+require_once('lib/pdo.php');
+
+// Check if form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Capture and sanitize form data
+    $bookTitle = htmlspecialchars($_POST['book_title']);
+    $bookAuthor = htmlspecialchars($_POST['book_author']);
+    $bookDescription = htmlspecialchars($_POST['book_description']);
+
+    // Prepare data for insertion
+    $data = [
+        'title' => $bookTitle,
+        'description' => $bookDescription,
+        'author' => $bookAuthor
+    ];
+
+    // Call the insert function (you can modify the function name and table as needed)
+    insert($pdo, 'books', $data);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -15,7 +36,7 @@
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-3" href="index.php">BookBound</a>
         <!-- Navbar Search-->
-        <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        <form method="post" class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
             <!--acts as a spacer for the sign in/sign out menu-->
             <div>
             </div>
@@ -88,11 +109,6 @@
                             <div class="mb-3">
                                 <label for="bookAuthor" class="form-label">Author</label>
                                 <input type="text" class="form-control" id="bookAuthor" name="book_author" placeholder="Enter the author">
-                            </div>
-                            <!-- Year Input -->
-                            <div class="mb-3">
-                                <label for="yearPublished" class="form-label">Year</label>
-                                <input type="number" class="form-control" id="yearPublished" name="book_year" min="1000" max="2099" value="2024" step="1">
                             </div>
                             <!-- Description Input -->
                             <div class="mb-3">
