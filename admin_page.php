@@ -46,29 +46,19 @@ require_once('lib/pdo.php');
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class=" sb-sidenav-menu">
                     <div class="nav sticky-top">
-                        <a class="nav-link mb-3" href="index.php">
+                        <a class="nav-link mb-3" href="admin_page.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Books & Clubs
                         </a>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
-                            data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
-                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
-                            My Content
-                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
-                        </a>
-                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
-                            data-bs-parent="#sidenavAccordion">
-                            <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="my_books.php">My Books</a>
-                                <a class="nav-link" href="my_clubs.php">My Clubs</a>
-                            </nav>
-                        </div>
-
-                        <a class="nav-link mt-3" href="account_info.php">
+                        <a class="nav-link mb-3" href="create_book.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Account Info
+                            Create Book
                         </a>
-                        <a class="nav-link mt-3" href="./index.php">
+                        <a class="nav-link mb-3" href="create_club.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Create Club
+                        </a>
+                        <a class="nav-link" href="./index.php">
                             <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                             Back to Home
                         </a>
