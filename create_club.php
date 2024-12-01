@@ -1,3 +1,24 @@
+<?php
+require_once('lib/pdo.php');
+
+// Check if form is submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Capture and sanitize form data
+    $clubName = htmlspecialchars($_POST['club_name']);
+    $clubLeaderEmail = htmlspecialchars($_POST['club_leader_email']);
+    $clubDescription = htmlspecialchars($_POST['club_description']);
+
+    // Prepare data for insertion
+    $data = [
+        'name' => $clubName,
+        'description' => $clubDescription,
+        'contact_email' => $clubLeaderEmail
+    ];
+
+    // Call the insert function (you can modify the function name and table as needed)
+    insert($pdo, 'book_clubs', $data);
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -80,10 +101,10 @@
                             <label for="clubName" class="form-label">Club Name</label>
                             <input type="text" class="form-control" id="clubName" name="club_name" placeholder="Enter the club name">
                         </div>
-                        <!-- Club Leader Input -->
+                        <!-- Club Leader Email Input -->
                         <div class="mb-3">
-                            <label for="clubLeader" class="form-label">Club Leader</label>
-                            <input type="text" class="form-control" id="clubLeader" name="club_leader" placeholder="Enter the Leader">
+                            <label for="clubLeaderEmail" class="form-label">Club Leader Email</label>
+                            <input type="email" class="form-control" id="clubLeaderEmail" name="club_leader_email" placeholder="Enter the Leader Contact Email">
                         </div>
                         <!-- Club Description Input -->
                         <div class="mb-3">
