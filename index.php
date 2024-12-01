@@ -61,6 +61,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Account Info
                             </a>
+                            <a class="nav-link mt-3" href="admin_page.php">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                Admin Page
+                            </a>
 
                             <?php
                             if(isset($_SESSION['username']) && $_SESSION['username'] === 'Admin'){
