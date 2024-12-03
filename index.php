@@ -89,32 +89,53 @@
             <div>
                 <main>
                     <!--Section for displaying a list of books-->
-                    <div class="container-fluid px-4">
-                        <table class="table responsive">
-                            <thead>
-                              <tr>
-                                <h2 class="mt-4 text-start">Check Out Our Books</h2>
-                              </tr>
-                            </thead>
-                            <tbody>
-                            
-                                <?php 
-                                    $result=query($pdo,'SELECT * FROM books');
-                                    while($book=$result->fetch()){
-                                        echo '<tr>';
-                                        echo '<td class="align-middle"><a href="book_detail.php?id='.$book['book_id'].'">'.$book['title'].'</a></td><td>'.$book['description'].'</td><td>'.$book['author'].'</td>';
-                                        echo '</tr>';
+                                                
+                            <?php 
+                                $result=query($pdo,'SELECT * FROM books');
+                                //if query has results, display a header for the club books section
+                                if($result->rowCount() > 0){
+                                    echo '<h1 class="ms-1">Check Out Our Books</h1>
+                                            <form method="POST">
+                                            <table class=" ms-1 me-1 table table-striped">
+                                                <thead class="">
+                                                    <th>Title</th>
+                                                    <th>Description</th>
+                                                    <th>Author</th>
+                                                    <th></th>
+                                                </thead>';
+                                }
+                                //display all books
+                                
+                                while($book=$result->fetch()){
+                                    echo '<tr>';
+                                    echo '<td class="align-middle"><a href="book_detail.php?id='.$book['book_id'].'">'.$book['title'].'</a></td><td class="align-middle w-75">'.$book['description'].'</td><td class="align-middle">'.$book['author'].'</td><td class="align-middle"><button type="submit" class="btn btn-dark" name="item" value="'.$book['book_id'].'">Add to List</button></td>';
+                                    echo '</tr>';
+                                }
+                                echo '</tbody>';
+                                echo '</table>';
+                                echo '</form>';
+                                
+                                //upon pressing button to add to list, query puts book info into user_books table
+                                if (isset($_POST['item']) and isset($_SESSION['user_id'])) {
+                                    //this line needs to be changed, it is a placeholder until the authentication section is complete
+                                    //check if user_books already has this entry, if not put entry into table, if it does skip do not put entry into table
+                                    if($result!=query($pdo,"SELECT * FROM user_books WHERE book_id=$_POST[item] AND user_id=$_SESSION[user_id]")){
+                                        query($pdo, "INSERT INTO user_books(`element_id`, `user_id`, `book_id`) VALUES (NULL,$_SESSOIN[user_id],$_POST[item])");
                                     }
-                                ?>
-                            </tbody>
-                          </table>
-                    </div>
+                                } 
+                            ?>
+
+                            <?php
+                                
+                            ?>
+                    
                     
                     <!--Section for displaying list of book clubs-->
                     <div class="container-fluid px-4 text-center mt-5">
                         <h2 class="text-start">Check Out Our Clubs</h2>
                         <div class="row ">
                             <?php
+                                //display all clubs
                                 $result=query($pdo,'SELECT * FROM book_clubs');
                                 while($club=$result->fetch()){
                                     echo '<div class="col">
@@ -125,15 +146,19 @@
                                                     <p class="card-text">'.$club['description'].'</p>
                                                     <form method="post">
                                                         <input type="hidden" name="club_name" value="">
-                                                        <input class="btn btn-success" type="submit" value="Join Club">
-                                                    </form>
-                                                    <form method="post">
-                                                        <input type="hidden" name="" value="">
-                                                        <input class="mt-2 btn btn-dark" type="submit" value="Not Interested">
+                                                        <input class="btn btn-success" type="submit" name="join" value="Join Club">
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>';
+                                }
+
+                                if (isset($_POST['join']) and isset($_SESSION['user_id'])) {
+                                    //this line needs to be changed, it is a placeholder until the authentication section is complete
+                                    //check if user_clubs already has this entry, if not put entry into table, if it does skip do not put entry into table
+                                    if($result!=query($pdo,"SELECT * FROM user_clubs WHERE club_id=$_POST[join] AND user_id=$_SESSION[user_id]")){
+                                        query($pdo, "INSERT INTO user_clubs(`element_id`, `user_id`, `club_id`) VALUES (NULL,$_SESSOIN[user_id],$_POST[join])");
+                                    }
                                 }
                             ?>
                         </div>

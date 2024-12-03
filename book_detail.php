@@ -84,17 +84,31 @@
             <div>
                 <main>
                     <?php 
+                        //display book details
                         $result=query($pdo,'SELECT * FROM books WHERE book_id='.$_GET['id'].'');
-                        while($book=$result->fetch()){
-                            echo '<h1 class="ms-2">'.$book['title'].'</h1>';
-                            echo '<p class="ms-2 fst-italic"> Written By: '.$book['author'].'</p>';
-                            echo '<div class="d-flex-column mx-2" style="width:40vw">
-                                    <p class="text-justify">'.$book['description'].'</p>
-                                </div>';                            
-                        }
+                        $book=$result->fetch();
+                        echo '<h1 class="ms-2">'.$book['title'].'</h1>';
+                        echo '<p class="ms-2 fst-italic"> Written By: '.$book['author'].'</p>';
+                        echo '<div class="d-flex-column mx-2" style="width:40vw">
+                                <p class="text-justify">'.$book['description'].'</p>
+                            </div>';                            
+                        
+                        echo '<button class="mt-2 ms-2 btn btn-dark" onclick="location.href=\'index.php\'">Back To Index</button>';
+                        echo '<form method="POST">
+                                <button type="submit" class="mt-2 ms-2 btn btn-success" name="add" value ="'.$_GET['id'].'">Add to List</button>
+                            </form>';
+                        
+                        //upon pressing button to add to list, query puts club info into user_books table
+                        if (isset($_POST['add']) and isset($_SESSION['user_id'])) {
+                            //this line needs to be changed, it is a placeholder until the authentication section is complete
+                            //check if user_books already has this entry, if not put entry into table, if it does skip do not put entry into table
+                            if($result!=query($pdo,"SELECT * FROM user_books WHERE book_id=$_POST[item] AND user_id=$_SESSION[user_id]")){
+                                query($pdo, "INSERT INTO user_books(`element_id`, `user_id`, `book_id`) VALUES (NULL,$_SESSOIN[user_id],$_POST[item])");
+                            }
+                        } 
                         
                     ?>
-                    <button class="mt-2 ms-2 btn btn-dark" onclick="location.href='index.php'">Back To List</button>
+                    
                     <div style="height: 100vh"></div>
                     
                 </main>

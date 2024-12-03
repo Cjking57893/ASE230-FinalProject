@@ -84,27 +84,57 @@
             <div>
                 <main>
                     <?php 
+                        //display club detail
                         $result=query($pdo,'SELECT * FROM book_clubs WHERE club_id='.$_GET['id'].'');
-                        while($club=$result->fetch()){
-                            echo '<h1 class="ms-2">'.$club['name'].'</h1>';
-                            echo '<p class="ms-2"> Point of Contact: '.$club['contact_email'].'</p>';
-                            echo '<div class="d-flex-column mx-2" style="width:40vw">
-                                    <p class="text-justify">'.$club['description'].'</p>
-                                </div>';                            
-                        }                       
-                    ?>
-                    <h1 class="ms-2">Check Out These Books</h1>
-                    <table class="ms-2">
-                    <?php 
+                        $club=$result->fetch();
+                        echo '<h1 class="ms-2">'.$club['name'].'</h1>';
+                        echo '<p class="ms-2"> Point of Contact: '.$club['contact_email'].'</p>';
+                        echo '<div class="d-flex-column mx-2" style="width:40vw">
+                                <p class="text-justify">'.$club['description'].'</p>
+                            </div>';               
+
+                        //query DB to find all club books                    
                         $result=query($pdo,'SELECT DISTINCT b.* FROM club_features cf JOIN books b ON cf.book_id = b.book_id WHERE cf.club_id='.$_GET['id'].'');
+                        //if query has results, display a header for the club books section
+                        echo '<form method="POST">';
+                        if($result->rowCount() > 0){
+                            echo '<h1 class="ms-1">Check Out These Books</h1>
+                                    <table class="ms-1 table table-striped">
+                                        <thead class="">
+                                        <th>Title</th>
+                                        <th>Description</th>
+                                        <th>Author</th>
+                                        <th></th>
+                                    </thead>';
+                        }
+
+                        //display all club books
                         while($book=$result->fetch()){
                             echo '<tr>';
-                            echo '<td class="align-middle"><a href="book_detail.php?id='.$book['book_id'].'">'.$book['title'].'</a></td><td>'.$book['description'].'</td><td>'.$book['author'].'</td>';
+                            echo '<td class="align-middle"><a href="book_detail.php?id='.$book['book_id'].'">'.$book['title'].'</a></td><td class="align-middle w-75">'.$book['description'].'</td><td class="align-middle">'.$book['author'].'</td><td class="align-middle"><button type="submit" class="btn btn-dark" name="item" value="'.$book['book_id'].'">Add to List</button></td>';
                             echo '</tr>';
                         }
+                        echo '</table>';
+                        echo '</form>';
+                        
+                        //form for joining club, or returning to index page
+                        echo '<button class="mt-2 ms-2 btn btn-dark" onclick="location.href=\'index.php\'">Back To Index</button>
+                            <form method="POST">
+                                <button type="submit" class="mt-2 ms-2 btn btn-success" name="join" value ="'.$_GET['id'].'">Join Club</button>
+                            </form>';
+
+                        //upon pressing button to join, query puts club info into user_clubs table
+                        if (isset($_POST['join']) and isset($_SESSION['user_id'])) {
+                          //this line needs to be changed, it is a placeholder until the authentication section is complete
+                            //check if user_clubs already has this entry, if not put entry into table, if it does skip do not put entry into table
+                            if($result!=query($pdo,"SELECT * FROM user_clubs WHERE club_id=$_POST[join] AND user_id=$_SESSION[user_id]")){
+                                query($pdo, "INSERT INTO user_clubs(`element_id`, `user_id`, `club_id`) VALUES (NULL,$_SESSOIN[user_id],$_POST[join])");
+                            }
+                                
+                        } 
+                        
                     ?>
-                    </table>
-                    <button class="mt-2 ms-2 btn btn-dark" onclick="location.href='index.php'">Back To List</button>
+                    
                     <div style="height: 100vh"></div>
                     
                 </main>
