@@ -120,18 +120,29 @@
                         //form for joining club, or returning to index page
                         echo '<button class="mt-2 ms-2 btn btn-dark" onclick="location.href=\'index.php\'">Back To Index</button>
                             <form method="POST">
-                                <button type="submit" class="mt-2 ms-2 btn btn-success" name="join" value ="'.$_GET['id'].'">Join Club</button>
+                                <button type="submit" class="mt-2 ms-2 btn btn-success" name="club_id" value ="'.$_GET['id'].'">Join Club</button>
                             </form>';
 
                         //upon pressing button to join, query puts club info into user_clubs table
-                        if (isset($_POST['join']) and isset($_SESSION['user_id'])) {
-                          //this line needs to be changed, it is a placeholder until the authentication section is complete
+                        if (isset($_POST['club_id'])) {
+                            $userID = 3; // Replace this with the actual user ID from session or authentication system
+                            $clubID = $_POST['club_id'];
+
+                            // Prepare a statement to check if the book already exists in user_clubs
+                            $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_clubs WHERE club_id = :club_id AND user_id = :user_id");
+                            $stmt->execute(['club_id' => $_POST['club_id'], 'user_id' => 3]);
+                            
+                            // Fetch the result
+                            $count = $stmt->fetchColumn();
+
+                            //this line needs to be changed, it is a placeholder until the authentication section is complete
                             //check if user_clubs already has this entry, if not put entry into table, if it does skip do not put entry into table
-                            if($result!=query($pdo,"SELECT * FROM user_clubs WHERE club_id=$_POST[join] AND user_id=$_SESSION[user_id]")){
-                                query($pdo, "INSERT INTO user_clubs(`element_id`, `user_id`, `club_id`) VALUES (NULL,$_SESSOIN[user_id],$_POST[join])");
+                            if($count == 0){
+                                // Use parameterized query to prevent SQL injection
+                                $stmt = $pdo->prepare("INSERT INTO user_clubs (user_id, club_id) VALUES (:user_id, :club_id)");
+                                $stmt->execute(['user_id' => $userID, 'club_id' => $clubID]);
                             }
-                                
-                        } 
+                        }
                         
                     ?>
                     

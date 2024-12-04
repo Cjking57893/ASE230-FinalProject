@@ -95,15 +95,26 @@
                         
                         echo '<button class="mt-2 ms-2 btn btn-dark" onclick="location.href=\'index.php\'">Back To Index</button>';
                         echo '<form method="POST">
-                                <button type="submit" class="mt-2 ms-2 btn btn-success" name="add" value ="'.$_GET['id'].'">Add to List</button>
+                                <button type="submit" class="mt-2 ms-2 btn btn-success" name="item" value ="'.$_GET['id'].'">Add to List</button>
                             </form>';
                         
                         //upon pressing button to add to list, query puts club info into user_books table
-                        if (isset($_POST['add']) and isset($_SESSION['user_id'])) {
+                        //upon pressing button to add to list, query puts book info into user_books table
+                        if (isset($_POST['item'])) {
+                            $userId = 3; // Replace this with the actual user ID from session or authentication system
+                            $bookId = $_POST['item'];
+                            // Prepare a statement to check if the book already exists in user_books
+                            $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_books WHERE book_id = :book_id AND user_id = :user_id");
+                            $stmt->execute(['book_id' => $_POST['item'], 'user_id' => 3]);
+                            
+                            // Fetch the result
+                            $count = $stmt->fetchColumn();
                             //this line needs to be changed, it is a placeholder until the authentication section is complete
                             //check if user_books already has this entry, if not put entry into table, if it does skip do not put entry into table
-                            if($result!=query($pdo,"SELECT * FROM user_books WHERE book_id=$_POST[item] AND user_id=$_SESSION[user_id]")){
-                                query($pdo, "INSERT INTO user_books(`element_id`, `user_id`, `book_id`) VALUES (NULL,$_SESSOIN[user_id],$_POST[item])");
+                            if($count == 0){
+                                 // Prepare an INSERT statement to add the book to the user_books table
+                                $stmt = $pdo->prepare("INSERT INTO user_books (`user_id`, `book_id`) VALUES (:user_id, :book_id)");
+                                $stmt->execute(['user_id' => $userId, 'book_id' => $bookId]);
                             }
                         } 
                         

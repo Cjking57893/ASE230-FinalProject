@@ -115,12 +115,23 @@
                                 echo '</table>';
                                 echo '</form>';
                                 
+                                
                                 //upon pressing button to add to list, query puts book info into user_books table
-                                if (isset($_POST['item']) and isset($_SESSION['user_id'])) {
+                                if (isset($_POST['item'])) {
+                                    $userId = 3; // Replace this with the actual user ID from session or authentication system
+                                    $bookId = $_POST['item'];
+                                    // Prepare a statement to check if the book already exists in user_books
+                                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_books WHERE book_id = :book_id AND user_id = :user_id");
+                                    $stmt->execute(['book_id' => $_POST['item'], 'user_id' => 3]);
+                                    
+                                    // Fetch the result
+                                    $count = $stmt->fetchColumn();
                                     //this line needs to be changed, it is a placeholder until the authentication section is complete
                                     //check if user_books already has this entry, if not put entry into table, if it does skip do not put entry into table
-                                    if($result!=query($pdo,"SELECT * FROM user_books WHERE book_id=$_POST[item] AND user_id=$_SESSION[user_id]")){
-                                        query($pdo, "INSERT INTO user_books(`element_id`, `user_id`, `book_id`) VALUES (NULL,$_SESSOIN[user_id],$_POST[item])");
+                                    if($count == 0){
+                                         // Prepare an INSERT statement to add the book to the user_books table
+                                        $stmt = $pdo->prepare("INSERT INTO user_books (`user_id`, `book_id`) VALUES (:user_id, :book_id)");
+                                        $stmt->execute(['user_id' => $userId, 'book_id' => $bookId]);
                                     }
                                 } 
                             ?>
@@ -145,19 +156,32 @@
                                                     <h6 class="card-subtitle mb-2 text-body-secondary">Point of Contact: '.$club['contact_email'].'</h6>
                                                     <p class="card-text">'.$club['description'].'</p>
                                                     <form method="post">
-                                                        <input type="hidden" name="club_name" value="">
+                                                        <input type="hidden" name="club_id" value="'.$club['club_id'].'">
                                                         <input class="btn btn-success" type="submit" name="join" value="Join Club">
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>';
                                 }
+                                
+                                
+                                if (isset($_POST['club_id'])) {
+                                    $userID = 3; // Replace this with the actual user ID from session or authentication system
+                                    $clubID = $_POST['club_id'];
 
-                                if (isset($_POST['join']) and isset($_SESSION['user_id'])) {
+                                    // Prepare a statement to check if the book already exists in user_clubs
+                                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_clubs WHERE club_id = :club_id AND user_id = :user_id");
+                                    $stmt->execute(['club_id' => $_POST['club_id'], 'user_id' => 3]);
+                                    
+                                    // Fetch the result
+                                    $count = $stmt->fetchColumn();
+
                                     //this line needs to be changed, it is a placeholder until the authentication section is complete
                                     //check if user_clubs already has this entry, if not put entry into table, if it does skip do not put entry into table
-                                    if($result!=query($pdo,"SELECT * FROM user_clubs WHERE club_id=$_POST[join] AND user_id=$_SESSION[user_id]")){
-                                        query($pdo, "INSERT INTO user_clubs(`element_id`, `user_id`, `club_id`) VALUES (NULL,$_SESSOIN[user_id],$_POST[join])");
+                                    if($count == 0){
+                                        // Use parameterized query to prevent SQL injection
+                                        $stmt = $pdo->prepare("INSERT INTO user_clubs (user_id, club_id) VALUES (:user_id, :club_id)");
+                                        $stmt->execute(['user_id' => $userID, 'club_id' => $clubID]);
                                     }
                                 }
                             ?>
