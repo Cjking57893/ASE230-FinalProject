@@ -118,11 +118,11 @@
                                 
                                 //upon pressing button to add to list, query puts book info into user_books table
                                 if (isset($_POST['item'])) {
-                                    $userId = 3; // Replace this with the actual user ID from session or authentication system
+                                    $userId = $_SESSION['user_id'];
                                     $bookId = $_POST['item'];
                                     // Prepare a statement to check if the book already exists in user_books
                                     $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_books WHERE book_id = :book_id AND user_id = :user_id");
-                                    $stmt->execute(['book_id' => $_POST['item'], 'user_id' => 3]);
+                                    $stmt->execute(['book_id' => $userId, 'user_id' => $bookId]);
                                     
                                     // Fetch the result
                                     $count = $stmt->fetchColumn();
@@ -166,12 +166,12 @@
                                 
                                 
                                 if (isset($_POST['club_id'])) {
-                                    $userID = 3; // Replace this with the actual user ID from session or authentication system
+                                    $userID = $_SESSION['user_id'];
                                     $clubID = $_POST['club_id'];
 
                                     // Prepare a statement to check if the book already exists in user_clubs
                                     $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_clubs WHERE club_id = :club_id AND user_id = :user_id");
-                                    $stmt->execute(['club_id' => $_POST['club_id'], 'user_id' => 3]);
+                                    $stmt->execute(['club_id' => $userID, 'user_id' => $clubID]);
                                     
                                     // Fetch the result
                                     $count = $stmt->fetchColumn();

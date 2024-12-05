@@ -125,12 +125,12 @@
 
                         //upon pressing button to join, query puts club info into user_clubs table
                         if (isset($_POST['club_id'])) {
-                            $userID = 3; // Replace this with the actual user ID from session or authentication system
+                            $userID = $_SESSION['user_id'];
                             $clubID = $_POST['club_id'];
 
                             // Prepare a statement to check if the book already exists in user_clubs
                             $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_clubs WHERE club_id = :club_id AND user_id = :user_id");
-                            $stmt->execute(['club_id' => $_POST['club_id'], 'user_id' => 3]);
+                            $stmt->execute(['club_id' => $clubID, 'user_id' => $userID]);
                             
                             // Fetch the result
                             $count = $stmt->fetchColumn();
