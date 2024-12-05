@@ -117,7 +117,7 @@
                                 
                                 
                                 //upon pressing button to add to list, query puts book info into user_books table
-                                if (isset($_POST['item'])) {
+                                if (isset($_POST['item']) and isset($_SESSION['user_id'])) {
                                     $userId = $_SESSION['user_id'];
                                     $bookId = $_POST['item'];
                                     // Prepare a statement to check if the book already exists in user_books
@@ -165,7 +165,7 @@
                                 }
                                 
                                 
-                                if (isset($_POST['club_id'])) {
+                                if (isset($_POST['club_id']) and isset($_SESSION['user_id'])) {
                                     $userID = $_SESSION['user_id'];
                                     $clubID = $_POST['club_id'];
 

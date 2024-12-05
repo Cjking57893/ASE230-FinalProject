@@ -124,7 +124,7 @@
                             </form>';
 
                         //upon pressing button to join, query puts club info into user_clubs table
-                        if (isset($_POST['club_id'])) {
+                        if (isset($_POST['club_id']) and isset($_SESSION['user_id'])) {
                             $userID = $_SESSION['user_id'];
                             $clubID = $_POST['club_id'];
 
