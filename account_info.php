@@ -1,5 +1,4 @@
 <?php 
-    session_start();
 
     include 'lib\file_reading_functions.php';
     include 'lib\file_writing_functions.php';

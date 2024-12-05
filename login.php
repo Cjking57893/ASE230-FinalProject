@@ -1,12 +1,11 @@
 <?php
-require_once('lib/pdo.php');
+require_once 'lib/pdo.php';
 session_start();
 
 if (isset($_SESSION['email'])) {
-    die('You are already signed in.');
+    header("Location: index.php"); 
 }
 
-$showForm = true;
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -18,14 +17,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql = "SELECT * FROM users WHERE email = :email";
             $stmt = $pdo->prepare($sql);
             $stmt->execute([':email' => $email]);
-            $user = $stmt->fetch();
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($user && password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['user_id']; 
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['first_name'] = $user['first_name'];
                 $_SESSION['last_name'] = $user['last_name'];
-                $_SESSION['account_type'] = $user['account_type']; 
+                $_SESSION['account_type'] = $user['account_type'];
 
                 header("Location: index.php");
                 exit();
@@ -39,8 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Email and password are required.';
     }
 }
-
-if ($showForm) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,8 +46,6 @@ if ($showForm) {
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
     <title>Login - SB Admin</title>
     <link href="bootstrap_resources/css/styles.css" rel="stylesheet" />
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -65,7 +61,7 @@ if ($showForm) {
                                 <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
                                 <div class="card-body">
                                     <?php if ($error): ?>
-                                        <div class="alert alert-danger"><?= $error ?></div>
+                                        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
                                     <?php endif; ?>
                                     <form method="POST">
                                         <div class="form-floating mb-3">
@@ -75,10 +71,6 @@ if ($showForm) {
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="inputPassword" type="password" name="password" placeholder="Password" required />
                                             <label for="inputPassword">Password</label>
-                                        </div>
-                                        <div class="form-check mb-3">
-                                            <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
-                                            <label class="form-check-label" for="inputRememberPassword">Remember Password</label>
                                         </div>
                                         <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
                                             <a class="small" href="password.html">Forgot Password?</a>
@@ -95,25 +87,8 @@ if ($showForm) {
                 </div>
             </main>
         </div>
-        <div id="layoutAuthentication_footer">
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Alanna Evans, Chris King, Cody King, Tyler White - 2024</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="bootstrap_resources/js/scripts.js"></script>
 </body>
 </html>
-<?php
-}
-?>

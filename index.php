@@ -1,18 +1,6 @@
 <?php 
-    session_start();
-    require_once('lib/pdo.php');
-
-    if (!isset($_SESSION['email'])) {
-        header("Location: login.php");
-        exit();
-    }
-
-$user_id = $_SESSION['user_id'];
-$email = $_SESSION['email'];
-$username = $_SESSION['username'];
-$first_name = $_SESSION['first_name'];
-$last_name = $_SESSION['last_name'];
-$account_type = $_SESSION['account_type'];
+require_once 'lib/pdo.php';
+require_once 'lib/user_session_info.php';
 
 ?>
 <!DOCTYPE html>
@@ -90,7 +78,7 @@ $account_type = $_SESSION['account_type'];
                         <?php
                             if(isset($_SESSION['username'])){
                                 echo "<div class=\"small\">Logged in as:</div>
-                                $_SESSION[username]";
+                                 $_SESSION[username]";
                             }
                             else{
                                 echo "<div class=\"small\">You are not logged in</div>";

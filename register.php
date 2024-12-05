@@ -10,8 +10,8 @@ if (isset($_POST['register'])) {
     $password = $_POST['password'];
     $first_name = trim($_POST['first_name']);
     $last_name = trim($_POST['last_name']);
-    $account_type = isset($_POST['account_type']) && $_POST['account_type'] === 'admin' ? 'admin' : 'basic';
-
+    $account_type = 'basic'; 
+    
     if (empty($username) || empty($email) || empty($password) || empty($first_name) || empty($last_name)) {
         $error = "All fields are required.";
     } else {
@@ -105,13 +105,6 @@ if (isset($_POST['register'])) {
                                         <div class="form-floating mb-3">
                                             <input class="form-control" id="inputPassword" type="password" name="password" placeholder="Create a password" required />
                                             <label for="inputPassword">Password</label>
-                                        </div>
-                                        <div class="form-floating mb-3">
-                                            <select class="form-control" id="inputAccountType" name="account_type" required>
-                                                <option value="basic">Basic User</option>
-                                                <option value="admin">Admin</option>
-                                            </select>
-                                            <label for="inputAccountType">Account Type</label>
                                         </div>
                                         <div class="mt-4 mb-0">
                                             <button type="submit" name="register" class="btn btn-primary">Sign up</button>
