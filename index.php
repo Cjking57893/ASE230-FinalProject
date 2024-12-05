@@ -1,5 +1,19 @@
 <?php 
+    session_start();
     require_once('lib/pdo.php');
+
+    if (!isset($_SESSION['email'])) {
+        header("Location: login.php");
+        exit();
+    }
+
+$user_id = $_SESSION['user_id'];
+$email = $_SESSION['email'];
+$username = $_SESSION['username'];
+$first_name = $_SESSION['first_name'];
+$last_name = $_SESSION['last_name'];
+$account_type = $_SESSION['account_type'];
+
 ?>
 <!DOCTYPE html>
 <html lang="en">

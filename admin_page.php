@@ -1,4 +1,6 @@
 <?php 
+    session_start();
+    
     include 'lib\admin_functions\file_reading_functions_admin.php';
     include 'lib\admin_functions\file_writing_functions_admin.php';
     include './lib/admin_functions/file_deleting_functions.php';

@@ -1,35 +1,42 @@
 <?php
-require_once('lib/functions.php');
-if (isset($_SESSION['email'])) die('You are already signed in.');
+require_once('lib/pdo.php');
+session_start();
+
+if (isset($_SESSION['email'])) {
+    die('You are already signed in.');
+}
+
 $showForm = true;
 $error = '';
 
-if (count($_POST) > 0) {
-    if (isset($_POST['email'][0]) && isset($_POST['password'][0])) {
-        // Check if the email exists
-        $fp = fopen(__DIR__ . '/data/users.csv.php', 'r');
-        while (!feof($fp)) {
-            $line = fgets($fp);
-            if (strstr($line, '<?php die() ?>') || strlen($line) < 5) continue;
-            $line = explode(';', trim($line));
-            if ($line[3] == $_POST['email'] && password_verify($_POST['password'], $line[4])) {
-                // Sign the user in
-                // 1. Save the user's data into the session
-                $_SESSION['email'] = $_POST['email'];
-                $_SESSION['username'] = $line[0];
-                $_SESSION['first_name'] = $line[1];
-                $_SESSION['last_name'] = $line[2];
-                // 2. Redirect or show success message
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!empty($_POST['email']) && !empty($_POST['password'])) {
+        $email = trim($_POST['email']);
+        $password = $_POST['password'];
+
+        try {
+            $sql = "SELECT * FROM users WHERE email = :email";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([':email' => $email]);
+            $user = $stmt->fetch();
+
+            if ($user && password_verify($password, $user['password'])) {
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['first_name'] = $user['first_name'];
+                $_SESSION['last_name'] = $user['last_name'];
+                $_SESSION['account_type'] = $user['account_type']; 
+
                 header("Location: index.php");
                 exit();
-                
+            } else {
+                $error = 'Invalid email or password.';
             }
+        } catch (PDOException $e) {
+            $error = "Error: " . $e->getMessage();
         }
-        fclose($fp);
-        // The credentials are wrong
-        if ($showForm) $error = 'Your credentials are wrong';
     } else {
-        $error = 'Email and password are missing';
+        $error = 'Email and password are required.';
     }
 }
 
