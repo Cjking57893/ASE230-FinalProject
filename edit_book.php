@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <body>
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">BookBound</a>
+            <a class="navbar-brand ps-3" href="index.php">BookBound</a>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <!--acts as a spacer for the sign in/sign out menu-->
@@ -114,17 +114,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <!-- Book Title Input -->
                             <div class="mb-3">
                                 <label for="bookTitle" class="form-label">Book Title</label>
-                                <input type="text" class="form-control" id="bookTitle" name="book_title" value="<?php echo htmlspecialchars($book['title']); ?>" required>
+                                <input type="text" class="form-control" id="bookTitle" name="book_title" value="<?php echo htmlspecialchars_decode($book['title']); ?>" required>
                             </div>
                             <!-- Author Input -->
                             <div class="mb-3">
                                 <label for="bookAuthor" class="form-label">Author</label>
-                                <input type="text" class="form-control" id="bookAuthor" name="book_author" value="<?php echo htmlspecialchars($book['author']); ?>" required>
+                                <input type="text" class="form-control" id="bookAuthor" name="book_author" value="<?php echo htmlspecialchars_decode($book['author']); ?>" required>
                             </div>
                             <!-- Description Input -->
                             <div class="mb-3">
                                 <label for="bookDescription" class="form-label">Description</label>
-                                <textarea class="form-control" id="bookDescription" name="book_description" rows="3" required><?php echo htmlspecialchars($book['description']); ?></textarea>
+                                <textarea class="form-control" id="bookDescription" name="book_description" rows="3" required><?php echo htmlspecialchars_decode($book['description']); ?></textarea>
                             </div>
                             <div class="mb-3">
                                 <button type="submit" class="btn btn-primary">Submit</button>
