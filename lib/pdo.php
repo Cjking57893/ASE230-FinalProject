@@ -43,3 +43,30 @@ function insert($pdo, $table, $data)
     $stmt = $pdo->prepare($sql);
     $stmt->execute(array_values($data));
 }
+
+// Function to update data in a specified table
+function update($pdo, $table, $data, $conditions)
+{
+    global $allowedTables;
+
+    // Check if the table name is valid
+    if (!in_array($table, $allowedTables)) {
+        throw new Exception("Invalid table name");
+    }
+
+    // Prepare the columns and placeholders for the update
+    $setPart = implode(", ", array_map(fn($key) => "$key = ?", array_keys($data)));
+
+    // Prepare the conditions and placeholders
+    $wherePart = implode(" AND ", array_map(fn($key) => "$key = ?", array_keys($conditions)));
+
+    // Create the SQL query
+    $sql = "UPDATE $table SET $setPart WHERE $wherePart";
+
+    // Combine values for the data and conditions
+    $values = array_merge(array_values($data), array_values($conditions));
+
+    // Prepare and execute the statement
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($values);
+}

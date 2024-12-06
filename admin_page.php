@@ -101,7 +101,7 @@ require_once('lib/pdo.php');
                             $result = query($pdo, 'SELECT * FROM books');
                             while ($book = $result->fetch()) {
                                 echo '<tr>';
-                                echo '<td class="align-middle"><a href="book_detail.php?id=' . $book['book_id'] . '">' . $book['title'] . '</a></td>';
+                                echo '<td class="align-middle"><a href="book_edit.php?id=' . $book['book_id'] . '">' . $book['title'] . '</a></td>';
                                 echo '<td class="align-middle">' . $book['description'] . '</td>';
                                 echo '<td class="align-middle">' . $book['author'] . '</td>';
                                 echo '<td class="align-middle">';
@@ -126,7 +126,7 @@ require_once('lib/pdo.php');
                             echo '<div class="col">';
                             echo '<div class="card mt-2 mb-2" style="width: 25rem;">';
                             echo '<div class="card-body">';
-                            echo '<h5 class="card-title"><a href="club_detail.php?id=' . $club['club_id'] . '">' . $club['name'] . '</a></h5>';
+                            echo '<h5 class="card-title"><a href="club_edit.php?id=' . $club['club_id'] . '">' . $club['name'] . '</a></h5>';
                             echo '<h6 class="card-subtitle mb-2 text-body-secondary">Point of Contact: ' . $club['contact_email'] . '</h6>';
                             echo '<p class="card-text">' . $club['description'] . '</p>';
                             echo '<a href="edit_club.php?id=' . $club['club_id'] . '" class="btn btn-secondary btn-sm me-2">Edit</a>';
