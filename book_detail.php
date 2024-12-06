@@ -1,6 +1,5 @@
 <?php 
     require_once('lib/pdo.php');
-    include_once('lib/user_session_info.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
