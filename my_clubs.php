@@ -62,11 +62,15 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Account Info
                             </a>
-
-                            <a class="nav-link mt-3" href="admin_page.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Admin Page
-                            </a>
+                            <?php
+                                if(isset($_SESSION['user_id']) and $_SESSION['account_type']=='Admin'){
+                                    echo '<a class="nav-link mt-3" href="admin_page.php">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                    Admin Page
+                                    </a>';
+                                }
+                                
+                            ?>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -103,11 +107,6 @@
                                             <h5 class="card-title"><a href="club_detail.php?id='.$club['club_id'].'">'.$club['name'].'</a></h5>
                                             <h6 class="card-subtitle mb-2 text-body-secondary">Point of Contact: '.$club['contact_email'].'</h6>
                                             <p class="card-text">'.$club['description'].'</p>
-                                            <form method="post">
-                                                <input type="hidden" name="club_name" value="">
-                                                <input class="btn btn-success" type="submit" value="Join Club">
-                                            </form>
-
                                         </div>
                                     </div>
                                 </div>';

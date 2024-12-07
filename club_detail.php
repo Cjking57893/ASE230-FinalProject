@@ -1,5 +1,6 @@
 <?php 
     require_once('lib/pdo.php');
+    require_once('lib/user_session_info.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -61,10 +62,15 @@
                                 Account Info
                             </a>
 
-                            <a class="nav-link mt-3" href="admin_page.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Admin Page
-                            </a>
+                            <?php
+                                if(isset($_SESSION['user_id']) and $_SESSION['account_type']=='Admin'){
+                                    echo '<a class="nav-link mt-3" href="admin_page.php">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                    Admin Page
+                                    </a>';
+                                }
+                                
+                            ?>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
@@ -125,25 +131,39 @@
 
                         //upon pressing button to join, query puts club info into user_clubs table
                         if (isset($_POST['club_id']) and isset($_SESSION['user_id'])) {
-                            $userID = $_SESSION['user_id'];
-                            $clubID = $_POST['club_id'];
+                            $user_id = $_SESSION['user_id'];
+                            $club_id = $_POST['club_id'];
 
-                            // Prepare a statement to check if the book already exists in user_clubs
-                            $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_clubs WHERE club_id = :club_id AND user_id = :user_id");
-                            $stmt->execute(['club_id' => $clubID, 'user_id' => $userID]);
-                            
+                            $result = query($pdo, "SELECT COUNT(*) FROM user_clubs WHERE club_id = $club_id AND user_id = $user_id");
+                                    
+                                    
                             // Fetch the result
-                            $count = $stmt->fetchColumn();
+                            $count = $result->fetchColumn();
 
-                            //this line needs to be changed, it is a placeholder until the authentication section is complete
+                            
                             //check if user_clubs already has this entry, if not put entry into table, if it does skip do not put entry into table
                             if($count == 0){
                                 // Use parameterized query to prevent SQL injection
                                 $stmt = $pdo->prepare("INSERT INTO user_clubs (user_id, club_id) VALUES (:user_id, :club_id)");
-                                $stmt->execute(['user_id' => $userID, 'club_id' => $clubID]);
+                                $stmt->execute(['user_id' => $user_id, 'club_id' => $club_id]);
                             }
                         }
-                        
+                        //upon pressing button to add to list, query puts book info into user_books table
+                        if (isset($_POST['item']) and isset($_SESSION['user_id'])) {
+                            $user_id = $_SESSION['user_id'];
+                            $book_id = $_POST['item'];
+                            $result = query($pdo, "SELECT COUNT(*) FROM user_books WHERE book_id = $book_id AND user_id = $user_id");
+                            
+                            // Fetch the result
+                            $count = $result->fetchColumn();
+                            
+                            //check if user_books already has this entry, if not put entry into table, if it does skip do not put entry into table
+                            if($count == 0){
+                                 // Prepare an INSERT statement to add the book to the user_books table
+                                $stmt = $pdo->prepare("INSERT INTO user_books (`user_id`, `book_id`) VALUES (:user_id, :book_id)");
+                                $stmt->execute(['user_id' => $user_id, 'book_id' => $book_id]);
+                            }
+                        } 
                     ?>
                     
                     <div style="height: 100vh"></div>

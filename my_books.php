@@ -64,10 +64,15 @@
                                 Account Info
                             </a>
 
-                            <a class="nav-link mt-3" href="admin_page.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Admin Page
-                            </a>
+                            <?php
+                                if(isset($_SESSION['user_id']) and $_SESSION['account_type']=='Admin'){
+                                    echo '<a class="nav-link mt-3" href="admin_page.php">
+                                    <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                    Admin Page
+                                    </a>';
+                                }
+                                
+                            ?>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
