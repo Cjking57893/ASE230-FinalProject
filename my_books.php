@@ -1,7 +1,7 @@
 <?php 
-    include 'lib\file_reading_functions.php';
-    include 'lib\file_writing_functions.php';
-    require_once('lib\functions.php');
+    require_once('lib/pdo.php');
+    require_once('lib/user_session_info.php');
+    //require_once('lib/signout.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -80,24 +80,39 @@
                                 echo "<div class=\"small\">You are not logged in</div>";
                             }
                         ?>
-                        
                     </div>
                 </nav>
             </div>
             <div>
-                <main>
+                <div>
+                <table class="table responsive">
+                            <thead>
+                              <tr>
+                                <h2 class="mt-4 text-start">My Book List</h2>
+                              </tr>
+                            </thead>
+                            <tbody>
                     <!--this is where the functions to show the books in my list go -->
                     <?php
-                        read_my_book_list("data/$_SESSION[username]_book_list.json");
-                        //check if user clicks button to join club, and call funciton to add it to the list
-                        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['book_remove'])) {
-                            $book_title = $_POST['book_remove'];
-                            $write_path = "data/$_SESSION[username]_book_list.json"; // Path to user's book list
-                    
-                            // Call the function to write the book to the user's list
-                            delete_book_from_user_list($write_path, $book_title);
+                    if(isset($_SESSION['user_id'])){
+                        $user_id = $_SESSION['user_id'];
+                        $result=query($pdo,'SELECT * FROM user_books INNER JOIN books ON user_books.book_id = books.book_id WHERE user_id = '.$user_id);
+                        while($book=$result->fetch()){
+                            echo '<tr>';
+                            echo '<td class="align-middle"><a href="book_detail.php?id='.$book['book_id'].'">'.$book['title'].'</a></td><td class="align-middle w-75">'.$book['description'].'</td><td class="align-middle">'.$book['author'].'</td>';
+                            echo '</tr>';
                         }
+                        echo '</tbody>';
+                        echo '</table>';
+                        echo '</form>';
+                        
+                    }else{
+                         echo "<h4>You are not logged in. You must be logged in to see your personalized pages.</h4>";
+                    }
                     ?>
+                    </tbody>
+                    </table>
+                    </div>
                 </main>
                 <div style="height: 100vh"></div>
                 <footer class="py-4 bg-light mt-auto">

@@ -1,7 +1,6 @@
 <?php 
-require_once 'lib/pdo.php';
-require_once 'lib/user_session_info.php';
-
+    require_once('lib/pdo.php');
+    require_once('lib/user_session_info.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -123,15 +122,15 @@ require_once 'lib/user_session_info.php';
                                 
                                 
                                 //upon pressing button to add to list, query puts book info into user_books table
-                                if (isset($_POST['item']) and isset($_SESSION['user_id'])) {
-                                    $userId = $_SESSION['user_id'];
+                                if (isset($_POST['item'])) {
+                                    $userId = 4;
                                     $bookId = $_POST['item'];
-                                    //check if the book already exists in user_books
-                                    $result = query($pdo, "SELECT COUNT(*) FROM user_books WHERE book_id = $bookId AND user_id = $userId");
+                                    // Prepare a statement to check if the book already exists in user_books
+                                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_books WHERE book_id = :book_id AND user_id = :user_id");
+                                    $stmt->execute(['book_id' => $userId, 'user_id' => $bookId]);
                                     
-                                    
-                                    //Fetch the result
-                                    $count = $result->fetchColumn();
+                                    // Fetch the result
+                                    $count = $stmt->fetchColumn();
                                     //this line needs to be changed, it is a placeholder until the authentication section is complete
                                     //check if user_books already has this entry, if not put entry into table, if it does skip do not put entry into table
                                     if($count == 0){
@@ -141,11 +140,6 @@ require_once 'lib/user_session_info.php';
                                     }
                                 } 
                             ?>
-
-                            <?php
-                                
-                            ?>
-                    
                     
                     <!--Section for displaying list of book clubs-->
                     <div class="container-fluid px-4 text-center mt-5">
@@ -169,18 +163,18 @@ require_once 'lib/user_session_info.php';
                                             </div>
                                         </div>';
                                 }
-                                
-                                
-                                if (isset($_POST['club_id']) and isset($_SESSION['user_id'])) {
+                               
+                                if (isset($_POST['club_id'])) {
+
                                     $userID = $_SESSION['user_id'];
                                     $clubID = $_POST['club_id'];
 
-                                    //check if the book already exists in user_clubs
-                                    $result = query($pdo, "SELECT COUNT(*) FROM user_clubs WHERE club_id = $clubID AND user_id = $userID");
-                
+                                    // Prepare a statement to check if the book already exists in user_clubs
+                                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_clubs WHERE club_id = :club_id AND user_id = :user_id");
+                                    $stmt->execute(['club_id' => $userID, 'user_id' => $clubID]);
                                     
-                                    //Fetch the result
-                                    $count = $result->fetchColumn();
+                                    // Fetch the result
+                                    $count = $stmt->fetchColumn();
 
                                     //this line needs to be changed, it is a placeholder until the authentication section is complete
                                     //check if user_clubs already has this entry, if not put entry into table, if it does skip do not put entry into table
@@ -189,7 +183,9 @@ require_once 'lib/user_session_info.php';
                                         $stmt = $pdo->prepare("INSERT INTO user_clubs (user_id, club_id) VALUES (:user_id, :club_id)");
                                         $stmt->execute(['user_id' => $userID, 'club_id' => $clubID]);
                                     }
+                        
                                 }
+                                
                             ?>
                         </div>
                     </div>

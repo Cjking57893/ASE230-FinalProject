@@ -1,8 +1,7 @@
 <?php 
-
-    include 'lib\file_reading_functions.php';
-    include 'lib\file_writing_functions.php';
-    require_once('lib\functions.php');
+    require_once('lib/pdo.php');
+    require_once('lib/user_session_info.php');
+  //  require_once('lib/signout.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -89,11 +88,14 @@
                 <main>
                     <!--this is where the functions to show the clubs in my list go -->
                     <?php
+                    if (isset($_SESSION['email'])) {
                         echo "<p><b>Email:</b> $_SESSION[email]</p>";
                         echo "<p><b>Username:</b> $_SESSION[username]</p>";
                         echo "<p><b>First Name:</b> $_SESSION[first_name]</p>";
                         echo "<p><b>Last Name:</b> $_SESSION[last_name]</p>";
-
+                    } else {
+                        echo "<p><b>You are not logged in. Please log in to see account information.</b></p>";
+                    }
                     ?>
                 </main>
                 <div style="height: 100vh"></div>
