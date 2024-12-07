@@ -1,5 +1,7 @@
 <?php 
-    require_once('lib/pdo.php');
+require_once 'lib/pdo.php';
+require_once 'lib/user_session_info.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -80,7 +82,7 @@
                         <?php
                             if(isset($_SESSION['username'])){
                                 echo "<div class=\"small\">Logged in as:</div>
-                                $_SESSION[username]";
+                                 $_SESSION[username]";
                             }
                             else{
                                 echo "<div class=\"small\">You are not logged in</div>";

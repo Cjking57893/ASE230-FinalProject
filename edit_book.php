@@ -1,5 +1,4 @@
 <?php 
-
 require_once('lib/pdo.php');
 
 $result = query($pdo, "SELECT * FROM books WHERE book_id = :id LIMIT 1", ['id' => $_GET['id']]);
