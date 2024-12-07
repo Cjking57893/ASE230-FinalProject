@@ -1,49 +1,38 @@
-<?php 
-include 'lib\admin_functions\file_reading_functions_admin.php';
-include 'lib\admin_functions\file_writing_functions_admin.php';
-include 'lib\admin_functions\file_editing_functions.php';
+<?php
 
-// Variables to hold club data
-$club_name = '';
-$club_leader = '';
-$club_description = '';
+require_once('lib/pdo.php');
 
-// Check if the club name is passed via the query string
-if (isset($_GET['club_name'])) {
-    $club_name = urldecode($_GET['club_name']);
+$result = query($pdo, "SELECT * FROM book_clubs WHERE club_id = :id LIMIT 1", ['id' => $_GET['id']]);
 
-    // Read the club list from the JSON file
-    $file_path = 'data/book_club_list.json';
-    if (file_exists($file_path)) {
-        $json_data = file_get_contents($file_path);
-        $club_list = json_decode($json_data, true);
+$club = $result->fetch();
 
-        // Search for the club by name
-        foreach ($club_list as $club) {
-            if (strcasecmp($club['name'], $club_name) == 0) {
-                // Club found, populate the form fields
-                $club_leader = $club['leader'];
-                $club_description = $club['description'];
-                break;
-            }
-        }
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['_method']) && $_POST['_method'] === 'PUT') {
+        // Sanitize and validate inputs
+        $club_name = htmlspecialchars_decode($_POST['club_name']);
+        $club_description = htmlspecialchars_decode($_POST['club_description']);
+        $club_contact_email = htmlspecialchars_decode($_POST['club_contact_email']);
+        $club_id = $_GET['id'];
+
+            // Prepare data for update function
+            $data = [
+                'name' => $club_name,
+                'description' => $club_description,
+                'contact_email' => $club_contact_email,
+            ];
+            $conditions = [
+                'club_id' => $club_id,
+            ];
+
+            // Use the update function to modify the record
+            update($pdo, 'book_clubs', $data, $conditions);
+
+            // Redirect to admin page
+            header("Location: admin_page.php");
+            exit;
     }
 }
 
-// Check if the form was submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get the form data
-    $new_club_name = $_POST['club_name'];
-    $new_club_leader = $_POST['club_leader'];
-    $new_club_description = $_POST['club_description'];
-
-    // Update the club information in the JSON file
-    edit_club(urldecode($_GET['club_name']), $new_club_name, $new_club_leader, $new_club_description);
-
-    // Redirect back to main page after submission
-    header('Location: admin_page.php');
-    exit;
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,52 +48,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-            <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">BookBound</a>
-            <!-- Navbar Search-->
-            <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
-                <!--acts as a spacer for the sign in/sign out menu-->
-                <div>
-                </div>
-            </form>
-            <!-- Navbar-->
-            <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Settings</a></li>
-                        <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#!">Logout</a></li>
-                    </ul>
-                </li>
+    <a class="navbar-brand ps-3" href="index.php">BookBound</a>
+    <ul class="navbar-nav ms-auto">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-user fa-fw"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li><a class="dropdown-item" href="#!">Logout</a></li>
             </ul>
-        </nav>
+        </li>
+    </ul>
+</nav>
+
 <div id="layoutSidenav">
     <div id="layoutSidenav_nav">
         <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
             <div class="sb-sidenav-menu">
                 <div class="nav sticky-top">
-                    <a class="nav-link" href="admin_page.php">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Books & Clubs
-                    </a>
-                    <a class="nav-link" href="create_book.php">
-                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                        Create Book
-                    </a>
-                    <a class="nav-link" href="create_club.php">
-                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                        Create Club
-                    </a>
-                    <a class="nav-link" href="index.php">
-                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                        Back to home
-                    </a>
+                <a class="nav-link mb-3" href="admin_page.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Books & Clubs
+                        </a>
+                        <a class="nav-link mb-3" href="create_book.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Create Book
+                        </a>
+                        <a class="nav-link mb-3" href="create_club.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Create Club
+                        </a>
+                        <a class="nav-link" href="./index.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Back to Home
+                        </a>
                 </div>
             </div>
             <div class="sb-sidenav-footer">
-                        <div class=\"small\">Logged in as:</div>
-                            Admin
+                <?php
+                if (isset($_SESSION['username'])) {
+                        echo "<div class=\"small\">Logged in as:</div>
+                                $_SESSION[username]";
+                    } else {
+                        echo "<div class=\"small\">You are not logged in</div>";
+                    }
+                ?>
             </div>
         </nav>
     </div>
@@ -113,21 +103,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <!-- Form for editing clubs -->
             <div class="container mx-auto">
                 <h2 class="mt-3 text-center">Edit Club</h2>
-                <form method="post">
+                <form method="post" action="">
+                    <input type="hidden" name="_method" value="PUT">
                     <!-- Club Name Input -->
                     <div class="mb-3">
                         <label for="clubName" class="form-label">Club Name</label>
-                        <input type="text" class="form-control" id="clubName" name="club_name" value="<?php echo htmlspecialchars($club_name); ?>" required>
+                        <input type="text" class="form-control" id="clubName" name="club_name" value="<?php echo htmlspecialchars_decode($club['name']); ?>" required>
                     </div>
-                    <!-- Leader Input -->
+                    <!-- Club Leader Email Input -->
                     <div class="mb-3">
-                        <label for="clubLeader" class="form-label">Leader</label>
-                        <input type="text" class="form-control" id="clubLeader" name="club_leader" value="<?php echo htmlspecialchars($club_leader); ?>" required>
+                        <label for="clubLeaderEmail" class="form-label">Club Leader Email</label>
+                        <input type="email" class="form-control" id="clubLeaderEmail" name="club_contact_email" value="<?php echo htmlspecialchars_decode($club['contact_email']); ?>" required>
                     </div>
                     <!-- Description Input -->
                     <div class="mb-3">
                         <label for="clubDescription" class="form-label">Description</label>
-                        <textarea class="form-control" id="clubDescription" name="club_description" rows="3" required><?php echo htmlspecialchars($club_description); ?></textarea>
+                        <textarea class="form-control" id="clubDescription" name="club_description" rows="3" required><?php echo htmlspecialchars_decode($club['description']); ?></textarea>
                     </div>
                     <div class="mb-3">
                         <button type="submit" class="btn btn-primary">Submit</button>

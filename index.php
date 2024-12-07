@@ -62,6 +62,10 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
                                 Account Info
                             </a>
+                            <a class="nav-link mt-3" href="admin_page.php">
+                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                                Admin Page
+                            </a>
 
                             <?php
                             if(isset($_SESSION['username']) && $_SESSION['username'] === 'Admin'){
@@ -77,7 +81,7 @@
                         <?php
                             if(isset($_SESSION['username'])){
                                 echo "<div class=\"small\">Logged in as:</div>
-                                $_SESSION[username]";
+                                 $_SESSION[username]";
                             }
                             else{
                                 echo "<div class=\"small\">You are not logged in</div>";
@@ -159,8 +163,7 @@
                                             </div>
                                         </div>';
                                 }
-                                
-                                
+                               
                                 if (isset($_POST['club_id'])) {
 
                                     $userID = $_SESSION['user_id'];
