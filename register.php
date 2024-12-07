@@ -1,48 +1,47 @@
 <?php
+require_once 'lib/pdo.php';
 
-require_once('lib/functions.php');
+$error = null;
+$successMessage = null;
 
-// Function to check if the email or username already exists
-function userExists($email, $username) {
-    $fp = fopen(__DIR__.'/data/users.csv.php', 'r');
-    while (!feof($fp)) {
-        $line = fgets($fp);
-        if (strstr($line, '<?php die() ?>') || strlen($line) < 5) continue;
-        $line = explode(';', trim($line));
-        if ($line[3] == $email || $line[0] == $username) {
-            fclose($fp);
-            return true; // Email or Username found
-        }
-    }
-    fclose($fp);
-    return false; // No match found
-}
-
-if (isset($_SESSION['email'])) die('You are already signed in, please sign out if you want to create a new account.');
-
-$showForm = true;
-$error = '';
-$successMessage = '';
-
-if (count($_POST) > 0) {
-    if (isset($_POST['email'][0]) && isset($_POST['password'][0]) && isset($_POST['first_name'][0]) && isset($_POST['last_name'][0]) && isset($_POST['username'][0])) {
-        // Check if the email or username already exists
-        if (!userExists($_POST['email'], $_POST['username'])) {
-            // Process information and save the user
-            $fp = fopen(__DIR__.'/data/users.csv.php', 'a+');
-            fputs($fp, $_POST['username'].';'.$_POST['first_name'].';'.$_POST['last_name'].';'.$_POST['email'].';'.password_hash($_POST['password'], PASSWORD_DEFAULT).PHP_EOL);
-            fclose($fp);
-            header("Location: login.php");
-                exit();
-        } else {
-            $error = 'Email or Username already exists!';
-        }
+if (isset($_POST['register'])) {
+    $username = trim($_POST['username']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $first_name = trim($_POST['first_name']);
+    $last_name = trim($_POST['last_name']);
+    $account_type = 'basic'; 
+    
+    if (empty($username) || empty($email) || empty($password) || empty($first_name) || empty($last_name)) {
+        $error = "All fields are required.";
     } else {
-        $error = 'All fields are required!';
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+        $sql = "INSERT INTO users (username, email, password, first_name, last_name, account_type) 
+                VALUES (:username, :email, :password, :first_name, :last_name, :account_type)";
+
+        try {
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([
+                ':username' => $username,
+                ':email' => $email,
+                ':password' => $hashedPassword,
+                ':first_name' => $first_name,
+                ':last_name' => $last_name,
+                ':account_type' => $account_type,
+            ]);
+
+            $successMessage = "Registration successful! You can now log in.";
+        } catch (PDOException $e) {
+
+            if ($e->getCode() == 23000) {
+                $error = "Username or email already exists. Please choose another.";
+            } else {
+                $error = "Error: " . $e->getMessage();
+            }
+        }
     }
 }
-
-if ($showForm) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -69,6 +68,11 @@ if ($showForm) {
                                     <?php if ($error): ?>
                                         <div class="alert alert-danger">
                                             <?= $error ?>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if ($successMessage): ?>
+                                        <div class="alert alert-success">
+                                            <?= $successMessage ?>
                                         </div>
                                     <?php endif; ?>
                                     <form method="POST">
@@ -103,7 +107,7 @@ if ($showForm) {
                                             <label for="inputPassword">Password</label>
                                         </div>
                                         <div class="mt-4 mb-0">
-                                            <button type="submit" class="btn btn-primary">Sign up</button>
+                                            <button type="submit" name="register" class="btn btn-primary">Sign up</button>
                                         </div>
                                     </form>
                                 </div>
@@ -135,9 +139,3 @@ if ($showForm) {
     <script src="bootstrap_resources/js/scripts.js"></script>
 </body>
 </html>
-<?php
-} else {
-    // Show success message
-    echo $successMessage;
-}
-?>

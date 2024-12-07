@@ -1,8 +1,7 @@
 <?php 
-    include 'lib\file_reading_functions.php';
-    include 'lib\file_writing_functions.php';
-    require_once('lib\functions.php');
-?>
+    require_once('lib/pdo.php');
+    require_once('lib/user_session_info.php');
+    ?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -71,8 +70,11 @@
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
-                        <?php
-                            if(isset($_SESSION['username'])){
+                    <?php
+
+                    ?>
+                     <?php //this was the old PHP
+                            if(isset($_SESSION['user_id'])){
                                 echo "<div class=\"small\">Logged in as:</div>
                                 $_SESSION[username]";
                             }
@@ -87,16 +89,32 @@
             <div>
                 <main>
                     <!--this is where the functions to show the clubs in my list go -->
+                    <h2 class="mt-4 text-start">My Club List</h2>
                     <?php
-                        read_my_club_list("data/$_SESSION[username]_clubs_list.json");
-                        //check if user clicks button to join club, and call funciton to add it to the list
-                        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['club_remove'])) {
-                            $club_title = $_POST['club_remove'];
-                            $write_path = "data/$_SESSION[username]_clubs_list.json"; // Path to user's club list
-                    
-                            // Call the function to write the club to the user's list
-                            delete_club_from_user_list($write_path, $club_title);
+
+// will want to read clubs from user_clubs
+                    if(isset($_SESSION['user_id'])){
+                        $user_id = $_SESSION['user_id'];
+                        $result=query($pdo,'SELECT * FROM user_clubs INNER JOIN book_clubs ON user_clubs.club_id = book_clubs.club_id WHERE user_id = '.$user_id);
+                        while($club=$result->fetch()){
+                            echo '<div class="col">
+                                    <div class="card mt-2 mb-2" style="width: 25rem;">
+                                        <div class="card-body">
+                                            <h5 class="card-title"><a href="club_detail.php?id='.$club['club_id'].'">'.$club['name'].'</a></h5>
+                                            <h6 class="card-subtitle mb-2 text-body-secondary">Point of Contact: '.$club['contact_email'].'</h6>
+                                            <p class="card-text">'.$club['description'].'</p>
+                                            <form method="post">
+                                                <input type="hidden" name="club_name" value="">
+                                                <input class="btn btn-success" type="submit" value="Join Club">
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>';
                         }
+                    }else{
+                        echo "<h4>You are not logged in. You must be logged in to see your personalized pages.</h4>";
+                    }
                     ?>
                 </main>
                 <div style="height: 100vh"></div>

@@ -1,5 +1,6 @@
 <?php 
     require_once('lib/pdo.php');
+    require_once('lib/user_session_info.php');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -89,32 +90,59 @@
             <div>
                 <main>
                     <!--Section for displaying a list of books-->
-                    <div class="container-fluid px-4">
-                        <table class="table responsive">
-                            <thead>
-                              <tr>
-                                <h2 class="mt-4 text-start">Check Out Our Books</h2>
-                              </tr>
-                            </thead>
-                            <tbody>
-                            
-                                <?php 
-                                    $result=query($pdo,'SELECT * FROM books');
-                                    while($book=$result->fetch()){
-                                        echo '<tr>';
-                                        echo '<td class="align-middle"><a href="book_detail.php?id='.$book['book_id'].'">'.$book['title'].'</a></td><td>'.$book['description'].'</td><td>'.$book['author'].'</td>';
-                                        echo '</tr>';
+                                                
+                            <?php 
+                                $result=query($pdo,'SELECT * FROM books');
+                                //if query has results, display a header for the club books section
+                                if($result->rowCount() > 0){
+                                    echo '<h1 class="ms-1">Check Out Our Books</h1>
+                                            <form method="POST">
+                                            <table class=" ms-1 me-1 table table-striped">
+                                                <thead class="">
+                                                    <th>Title</th>
+                                                    <th>Description</th>
+                                                    <th>Author</th>
+                                                    <th></th>
+                                                </thead>';
+                                }
+                                //display all books
+                                
+                                while($book=$result->fetch()){
+                                    echo '<tr>';
+                                    echo '<td class="align-middle"><a href="book_detail.php?id='.$book['book_id'].'">'.$book['title'].'</a></td><td class="align-middle w-75">'.$book['description'].'</td><td class="align-middle">'.$book['author'].'</td><td class="align-middle"><button type="submit" class="btn btn-dark" name="item" value="'.$book['book_id'].'">Add to List</button></td>';
+                                    echo '</tr>';
+                                }
+                                echo '</tbody>';
+                                echo '</table>';
+                                echo '</form>';
+                                
+                                
+                                //upon pressing button to add to list, query puts book info into user_books table
+                                if (isset($_POST['item'])) {
+                                    $userId = 4;
+                                    $bookId = $_POST['item'];
+                                    // Prepare a statement to check if the book already exists in user_books
+                                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_books WHERE book_id = :book_id AND user_id = :user_id");
+                                    $stmt->execute(['book_id' => $userId, 'user_id' => $bookId]);
+                                    
+                                    // Fetch the result
+                                    $count = $stmt->fetchColumn();
+                                    //this line needs to be changed, it is a placeholder until the authentication section is complete
+                                    //check if user_books already has this entry, if not put entry into table, if it does skip do not put entry into table
+                                    if($count == 0){
+                                         // Prepare an INSERT statement to add the book to the user_books table
+                                        $stmt = $pdo->prepare("INSERT INTO user_books (`user_id`, `book_id`) VALUES (:user_id, :book_id)");
+                                        $stmt->execute(['user_id' => $userId, 'book_id' => $bookId]);
                                     }
-                                ?>
-                            </tbody>
-                          </table>
-                    </div>
+                                } 
+                            ?>
                     
                     <!--Section for displaying list of book clubs-->
                     <div class="container-fluid px-4 text-center mt-5">
                         <h2 class="text-start">Check Out Our Clubs</h2>
                         <div class="row ">
                             <?php
+                                //display all clubs
                                 $result=query($pdo,'SELECT * FROM book_clubs');
                                 while($club=$result->fetch()){
                                     echo '<div class="col">
@@ -124,17 +152,37 @@
                                                     <h6 class="card-subtitle mb-2 text-body-secondary">Point of Contact: '.$club['contact_email'].'</h6>
                                                     <p class="card-text">'.$club['description'].'</p>
                                                     <form method="post">
-                                                        <input type="hidden" name="club_name" value="">
-                                                        <input class="btn btn-success" type="submit" value="Join Club">
-                                                    </form>
-                                                    <form method="post">
-                                                        <input type="hidden" name="" value="">
-                                                        <input class="mt-2 btn btn-dark" type="submit" value="Not Interested">
+                                                        <input type="hidden" name="club_id" value="'.$club['club_id'].'">
+                                                        <input class="btn btn-success" type="submit" name="join" value="Join Club">
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>';
                                 }
+                                
+                                
+                                if (isset($_POST['club_id'])) {
+
+                                    $userID = $_SESSION['user_id'];
+                                    $clubID = $_POST['club_id'];
+
+                                    // Prepare a statement to check if the book already exists in user_clubs
+                                    $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_clubs WHERE club_id = :club_id AND user_id = :user_id");
+                                    $stmt->execute(['club_id' => $userID, 'user_id' => $clubID]);
+                                    
+                                    // Fetch the result
+                                    $count = $stmt->fetchColumn();
+
+                                    //this line needs to be changed, it is a placeholder until the authentication section is complete
+                                    //check if user_clubs already has this entry, if not put entry into table, if it does skip do not put entry into table
+                                    if($count == 0){
+                                        // Use parameterized query to prevent SQL injection
+                                        $stmt = $pdo->prepare("INSERT INTO user_clubs (user_id, club_id) VALUES (:user_id, :club_id)");
+                                        $stmt->execute(['user_id' => $userID, 'club_id' => $clubID]);
+                                    }
+                        
+                                }
+                                
                             ?>
                         </div>
                     </div>
