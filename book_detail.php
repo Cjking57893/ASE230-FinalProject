@@ -84,17 +84,42 @@
             <div>
                 <main>
                     <?php 
+                        //display book details
                         $result=query($pdo,'SELECT * FROM books WHERE book_id='.$_GET['id'].'');
-                        while($book=$result->fetch()){
-                            echo '<h1 class="ms-2">'.$book['title'].'</h1>';
-                            echo '<p class="ms-2 fst-italic"> Written By: '.$book['author'].'</p>';
-                            echo '<div class="d-flex-column mx-2" style="width:40vw">
-                                    <p class="text-justify">'.$book['description'].'</p>
-                                </div>';                            
-                        }
+                        $book=$result->fetch();
+                        echo '<h1 class="ms-2">'.$book['title'].'</h1>';
+                        echo '<p class="ms-2 fst-italic"> Written By: '.$book['author'].'</p>';
+                        echo '<div class="d-flex-column mx-2" style="width:40vw">
+                                <p class="text-justify">'.$book['description'].'</p>
+                            </div>';                            
+                        
+                        echo '<button class="mt-2 ms-2 btn btn-dark" onclick="location.href=\'index.php\'">Back To Index</button>';
+                        echo '<form method="POST">
+                                <button type="submit" class="mt-2 ms-2 btn btn-success" name="item" value ="'.$_GET['id'].'">Add to List</button>
+                            </form>';
+                        
+                        //upon pressing button to add to list, query puts club info into user_books table
+                        //upon pressing button to add to list, query puts book info into user_books table
+                        if (isset($_POST['item']) and isset($_SESSION['user_id'])) {
+                            $userId = $_SESSION['user_id'];
+                            $bookId = $_POST['item'];
+                            // Prepare a statement to check if the book already exists in user_books
+                            $stmt = $pdo->prepare("SELECT COUNT(*) FROM user_books WHERE book_id = :book_id AND user_id = :user_id");
+                            $stmt->execute(['book_id' => $bookId , 'user_id' => $userId]);
+                            
+                            // Fetch the result
+                            $count = $stmt->fetchColumn();
+                            //this line needs to be changed, it is a placeholder until the authentication section is complete
+                            //check if user_books already has this entry, if not put entry into table, if it does skip do not put entry into table
+                            if($count == 0){
+                                 // Prepare an INSERT statement to add the book to the user_books table
+                                $stmt = $pdo->prepare("INSERT INTO user_books (`user_id`, `book_id`) VALUES (:user_id, :book_id)");
+                                $stmt->execute(['user_id' => $userId, 'book_id' => $bookId]);
+                            }
+                        } 
                         
                     ?>
-                    <button class="mt-2 ms-2 btn btn-dark" onclick="location.href='index.php'">Back To List</button>
+                    
                     <div style="height: 100vh"></div>
                     
                 </main>
