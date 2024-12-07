@@ -1,54 +1,38 @@
 <?php 
+require_once('lib/pdo.php');
 
-include 'lib\admin_functions\file_reading_functions_admin.php';
-include 'lib\admin_functions\file_writing_functions_admin.php';
-include 'lib\admin_functions\file_creating_functions.php';
-include 'lib\admin_functions\file_editing_functions.php';
+$result = query($pdo, "SELECT * FROM books WHERE book_id = :id LIMIT 1", ['id' => $_GET['id']]);
 
-// Variables to hold book data
-$book_title = '';
-$book_author = '';
-$book_year = '';
-$book_description = '';
+$book = $result->fetch();
 
-// Check if the book title is passed via the query string
-if (isset($_GET['book_title'])) {
-    $book_title = urldecode($_GET['book_title']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['_method']) && $_POST['_method'] === 'PUT') {
+        // Sanitize and validate inputs
+        $book_title = htmlspecialchars($_POST['book_title']);
+        $book_author = htmlspecialchars($_POST['book_author']);
+        $book_description = htmlspecialchars($_POST['book_description']);
+        $book_id = $_GET['id'];
 
-    // Read the book list from the JSON file
-    $file_path = 'data/book_list.json';
-    if (file_exists($file_path)) {
-        $json_data = file_get_contents($file_path);
-        $book_list = json_decode($json_data, true);
+            // Prepare data for update function
+            $data = [
+                'title' => $book_title,
+                'author' => $book_author,
+                'description' => $book_description,
+            ];
+            $conditions = [
+                'book_id' => $book_id,
+            ];
 
-        // Search for the book by title
-        foreach ($book_list as $book) {
-            if (strcasecmp($book['title'], $book_title) == 0) {
-                // Book found, populate the form fields
-                $book_author = $book['author'];
-                $book_year = $book['year'];
-                $book_description = $book['description'];
-                break;
-            }
-        }
+            // Use the update function to modify the record
+            update($pdo, 'books', $data, $conditions);
+
+            // Redirect to admin page
+            header("Location: admin_page.php");
+            exit;
     }
 }
 
-// Check if the form was submitted
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get the form data
-    $new_book_title = $_POST['book_title'];
-    $new_book_author = $_POST['book_author'];
-    $new_book_year = $_POST['book_year'];
-    $new_book_description = $_POST['book_description'];
 
-    // Call the edit_book function to save the updated book information
-    edit_book(urldecode($_GET['book_title']), $new_book_title, $new_book_author, $new_book_year, $new_book_description);
-
-    // Redirect back to a main page after submission
-    header('Location: admin_page.php');
-    exit;
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <body>
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
             <!-- Navbar Brand-->
-            <a class="navbar-brand ps-3" href="index.html">BookBound</a>
+            <a class="navbar-brand ps-3" href="index.php">BookBound</a>
             <!-- Navbar Search-->
             <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
                 <!--acts as a spacer for the sign in/sign out menu-->
@@ -89,34 +73,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class=" sb-sidenav-menu">
                         <div class="nav sticky-top">
-                        <a class="nav-link" href="admin_page.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Books & Clubs
-                            </a>
-                            <a class="nav-link" href="create_book.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Create Book
-                            </a>
-                            <a class="nav-link" href="create_club.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Create Club
-                            </a>
-                            <a class="nav-link" href="index.php">
-                                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-                                Back to home
-                            </a>
-                            <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
-                                <nav class="sb-sidenav-menu-nested nav">
-                                    <a class="nav-link" href="my_books.php">My Books</a>
-                                    <a class="nav-link" href="my_clubs.php">My Clubs</a>
-                                </nav>
-                            </div>
+                        <a class="nav-link mb-3" href="admin_page.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                            Books & Clubs
+                        </a>
+                        <a class="nav-link mb-3" href="create_book.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Create Book
+                        </a>
+                        <a class="nav-link mb-3" href="create_club.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Create Club
+                        </a>
+                        <a class="nav-link" href="./index.php">
+                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                            Back to Home
+                        </a>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
-                        <div class=\"small\">Logged in as:</div>
-                            Admin
-                    </div>
+                    <?php
+                    if (isset($_SESSION['username'])) {
+                        echo "<div class=\"small\">Logged in as:</div>
+                                $_SESSION[username]";
+                    } else {
+                        echo "<div class=\"small\">You are not logged in</div>";
+                    }
+                    ?>
+                </div>
                 </nav>
             </div>
             <div>
@@ -124,26 +108,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <!-- Form for editing books -->
                     <div class="container mx-auto">
                         <h2 class="mt-3 text-center">Edit Book</h2>
-                        <form method="post">
+                        <form method="post" action="">
+                            <input type="hidden" name="_method" value="PUT">
                             <!-- Book Title Input -->
                             <div class="mb-3">
                                 <label for="bookTitle" class="form-label">Book Title</label>
-                                <input type="text" class="form-control" id="bookTitle" name="book_title" value="<?php echo htmlspecialchars($book_title); ?>" required>
+                                <input type="text" class="form-control" id="bookTitle" name="book_title" value="<?php echo htmlspecialchars_decode($book['title']); ?>" required>
                             </div>
                             <!-- Author Input -->
                             <div class="mb-3">
                                 <label for="bookAuthor" class="form-label">Author</label>
-                                <input type="text" class="form-control" id="bookAuthor" name="book_author" value="<?php echo htmlspecialchars($book_author); ?>" required>
-                            </div>
-                            <!-- Year Input -->
-                            <div class="mb-3">
-                                <label for="yearPublished" class="form-label">Year</label>
-                                <input type="number" class="form-control" id="yearPublished" name="book_year" min="1000" max="2099" value="<?php echo htmlspecialchars($book_year); ?>" required>
+                                <input type="text" class="form-control" id="bookAuthor" name="book_author" value="<?php echo htmlspecialchars_decode($book['author']); ?>" required>
                             </div>
                             <!-- Description Input -->
                             <div class="mb-3">
                                 <label for="bookDescription" class="form-label">Description</label>
-                                <textarea class="form-control" id="bookDescription" name="book_description" rows="3" required><?php echo htmlspecialchars($book_description); ?></textarea>
+                                <textarea class="form-control" id="bookDescription" name="book_description" rows="3" required><?php echo htmlspecialchars_decode($book['description']); ?></textarea>
                             </div>
                             <div class="mb-3">
                                 <button type="submit" class="btn btn-primary">Submit</button>
